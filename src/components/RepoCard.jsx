@@ -21,7 +21,7 @@ export default function RepoCard({ repo, onClose }) {
   const langColor = getLangColor(repo.language)
 
   return (
-    <div className="fixed right-0 top-0 h-full w-80 bg-black/85 backdrop-blur-md border-l border-white/10 p-6 flex flex-col gap-4 z-50 animate-slide-in overflow-y-auto">
+    <div className="fixed bottom-0 left-0 right-0 max-h-[70vh] sm:bottom-auto sm:left-auto sm:right-0 sm:top-0 sm:h-full sm:w-80 bg-black/90 backdrop-blur-md border-t border-white/10 sm:border-t-0 sm:border-l rounded-t-2xl sm:rounded-none p-6 flex flex-col gap-4 z-50 animate-slide-up sm:animate-slide-in overflow-y-auto">
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1 min-w-0">

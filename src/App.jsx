@@ -73,31 +73,32 @@ export default function App() {
 
       {/* Profile badge (shown after load) */}
       {profile && !loading && (
-        <div className="absolute top-4 left-4 z-30 flex items-center gap-3">
+        <div className="absolute top-3 left-3 z-30 flex items-center gap-2">
           <img
             src={profile.avatar_url}
             alt={profile.login}
-            className="w-10 h-10 rounded-full border-2 border-orange-400/60"
+            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 border-orange-400/60 flex-shrink-0"
           />
-          <div>
-            <p className="text-white font-semibold text-sm">{profile.name || profile.login}</p>
-            <p className="text-white/40 text-xs">@{profile.login} · {repos.length} repos</p>
+          <div className="min-w-0">
+            <p className="text-white font-semibold text-xs sm:text-sm truncate max-w-[120px] sm:max-w-none">{profile.name || profile.login}</p>
+            <p className="text-white/40 text-xs hidden sm:block">@{profile.login} · {repos.length} repos</p>
+            <p className="text-white/40 text-xs sm:hidden">{repos.length} repos</p>
           </div>
           <button
             onClick={() => setShowInput(true)}
-            className="ml-2 px-3 py-1 rounded-lg text-xs bg-white/10 text-white/60 hover:bg-white/20 hover:text-white transition-colors border border-white/10"
+            className="ml-1 px-2 sm:px-3 py-1 rounded-lg text-xs bg-white/10 text-white/60 hover:bg-white/20 hover:text-white transition-colors border border-white/10 flex-shrink-0"
           >
             Change
           </button>
         </div>
       )}
 
-      {/* Legend (shown after load) */}
-      {profile && !loading && (
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-5 text-white/25 text-xs pointer-events-none">
-          <span>Scroll to zoom</span>
-          <span>Drag to rotate</span>
-          <span>Click planet for details</span>
+      {/* Legend (shown after load, hidden on mobile when a repo is selected to avoid clash with bottom sheet) */}
+      {profile && !loading && !selectedRepo && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-3 sm:gap-5 text-white/25 text-xs pointer-events-none whitespace-nowrap">
+          <span className="hidden sm:inline">Scroll to zoom</span>
+          <span className="hidden sm:inline">Drag to rotate</span>
+          <span>Tap planet for details</span>
         </div>
       )}
 

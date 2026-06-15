@@ -10,20 +10,20 @@ export default function UsernameInput({ onSubmit, loading }) {
   }
 
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center z-40 pointer-events-none">
-      <div className="pointer-events-auto text-center flex flex-col items-center gap-6">
+    <div className="fixed inset-0 flex flex-col items-center justify-center z-40 pointer-events-none px-4">
+      <div className="pointer-events-auto text-center flex flex-col items-center gap-6 w-full max-w-lg">
         {/* Title */}
         <div className="flex flex-col gap-3">
-          <h1 className="text-6xl font-bold text-white tracking-wide leading-tight">
+          <h1 className="text-4xl sm:text-6xl font-bold text-white tracking-wide leading-tight">
             GitHub <span className="text-orange-400">Solar System</span>
           </h1>
-          <p className="text-white/40 text-base tracking-widest uppercase">
+          <p className="text-white/40 text-sm sm:text-base tracking-widest uppercase">
             Enter any GitHub username to explore their repos
           </p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="flex gap-3 justify-center mt-2">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 justify-center mt-2 w-full">
           <input
             type="text"
             value={value}
@@ -32,7 +32,7 @@ export default function UsernameInput({ onSubmit, loading }) {
             disabled={loading}
             autoFocus
             className="
-              w-96 px-6 py-4 rounded-xl
+              w-full sm:w-80 px-6 py-4 rounded-xl
               bg-white/10 text-white placeholder-white/30
               border border-white/20 focus:border-orange-400/60
               outline-none text-base tracking-wide
@@ -54,7 +54,7 @@ export default function UsernameInput({ onSubmit, loading }) {
         </form>
 
         {/* Legend */}
-        <div className="flex gap-8 justify-center text-white/25 text-xs tracking-wider uppercase mt-2">
+        <div className="grid grid-cols-2 sm:flex sm:gap-8 gap-x-6 gap-y-1 justify-center text-white/25 text-xs tracking-wider uppercase mt-2">
           <span>Planet size = ★ stars</span>
           <span>Speed = commit freq</span>
           <span>Rings = open issues</span>
