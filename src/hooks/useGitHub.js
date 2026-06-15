@@ -1,12 +1,26 @@
 import { useState, useCallback } from 'react'
 
 const BASE = 'https://api.github.com'
+const TOKEN = import.meta.env.VITE_GITHUB_TOKEN
+
+function ghHeaders() {
+  const headers = { Accept: 'application/vnd.github.v3+json' }
+  if (TOKEN) headers['Authorization'] = `Bearer ${TOKEN}`
+  return headers
+}
 
 async function ghFetch(url) {
-  const res = await fetch(url, {
-    headers: { Accept: 'application/vnd.github.v3+json' },
-  })
-  if (!res.ok) throw new Error(`GitHub API error ${res.status}: ${res.statusText}`)
+  const res = await fetch(url, { headers: ghHeaders() })
+  if (!res.ok) {
+    if (res.status === 403 || res.status === 429) {
+      const reset = res.headers.get('X-RateLimit-Reset')
+      const resetTime = reset ? new Date(Number(reset) * 1000).toLocaleTimeString() : null
+      throw new Error(
+        `GitHub rate limit exceeded.${resetTime ? ` Resets at ${resetTime}.` : ''} Add a VITE_GITHUB_TOKEN to increase the limit to 5,000 req/hour.`
+      )
+    }
+    throw new Error(`GitHub API error ${res.status}: ${res.statusText}`)
+  }
   return res.json()
 }
 
@@ -28,14 +42,16 @@ export function useGitHub() {
         ghFetch(`${BASE}/users/${username}/repos?per_page=100&sort=updated`),
       ])
 
-      // Fetch contributor counts for each repo in parallel (cap at 30 repos)
       const topRepos = repoList
         .filter((r) => !r.fork)
         .sort((a, b) => b.stargazers_count - a.stargazers_count)
         .slice(0, 30)
 
+      // Fetch contributors only for the top 10 repos to stay within rate limits
+      const reposForContributors = topRepos.slice(0, 10)
+
       const contributorsResults = await Promise.allSettled(
-        topRepos.map((r) =>
+        reposForContributors.map((r) =>
           ghFetch(`${BASE}/repos/${username}/${r.name}/contributors?per_page=5&anon=false`)
         )
       )
@@ -43,7 +59,7 @@ export function useGitHub() {
       const enriched = topRepos.map((repo, i) => ({
         ...repo,
         contributors:
-          contributorsResults[i].status === 'fulfilled'
+          i < reposForContributors.length && contributorsResults[i].status === 'fulfilled'
             ? contributorsResults[i].value.slice(0, 5).filter((c) => c.login !== username)
             : [],
       }))
