@@ -9,7 +9,7 @@ function orbitSpeed(repo) {
   const daysSinceUpdate =
     (Date.now() - new Date(repo.pushed_at).getTime()) / (1000 * 60 * 60 * 24)
   // Fresh repos orbit fast; stale repos orbit slow
-  return Math.max(0.02, Math.min(0.5, 30 / (daysSinceUpdate + 10)))
+  return Math.max(0.008, Math.min(0.18, 10 / (daysSinceUpdate + 10)))
 }
 
 function planetSize(repo) {
